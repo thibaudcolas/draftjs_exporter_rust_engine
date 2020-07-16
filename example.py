@@ -8,6 +8,8 @@ from draftjs_exporter.dom import DOM
 from draftjs_exporter.html import HTML
 from draftjs_exporter.types import Element, Props
 
+from markov_draftjs import get_content_sample
+
 def image(props: Props) -> Element:
     return DOM.create_element('img', {
         'src': props.get('src'),
@@ -67,13 +69,17 @@ if __name__ == '__main__':
             ENTITY_TYPES.HORIZONTAL_RULE: lambda props: DOM.create_element('hr'),
             # Discard those entities.
             ENTITY_TYPES.EMBED: None,
+            ENTITY_TYPES.FALLBACK: None,
         },
         'engine': 'draftjs_exporter_rust_engine.engine.DOMString',
+        # 'engine': 'draftjs_exporter_rust_engine.reference_engine.DOMString',
     })
 
-    markup = exporter.render(content_state)
+    content_states = get_content_sample()
 
-    print(markup)
+    for content_state in content_states:
+      markup = exporter.render(content_state)
+      # print(markup)
 
     # Output to a Markdown file to showcase the output in GitHub (and see changes in git).
     with codecs.open('docs/example.txt', 'w', 'utf-8') as file:

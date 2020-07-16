@@ -77,31 +77,6 @@ class DOMString(DOMEngine):
     @staticmethod
     def render(elt: Elt) -> HTML:
         type_ = elt.type
-        attr = string_engine.render_attrs(elt.attr) if elt.attr else ''
+        # attr = string_engine.render_attrs(elt.attr) if elt.attr else ''
         children = DOMString.render_children(elt.children) if elt.children else ''
-
-        if type_ == 'fragment':
-            return children
-
-        if type_ in VOID_ELEMENTS:
-            return '<%s%s/>' % (type_, attr)
-
-        if type_ == 'escaped_html':
-            return elt.markup  # type: ignore
-
-        return '<%s%s>%s</%s>' % (type_, attr, children, type_)
-
-    @staticmethod
-    def render_debug(elt: Elt) -> HTML:
-        type_ = elt.type
-        attr = string_engine.render_attrs(elt.attr) if elt.attr else ''
-        children = DOMString.render_children(elt.children) if elt.children else ''
-
-        if type_ in VOID_ELEMENTS:
-            return '<%s%s/>' % (type_, attr)
-
-        if type_ == 'escaped_html':
-            return elt.markup  # type: ignore
-
-        return '<%s%s>%s</%s>' % (type_, attr, children, type_)
-
+        return string_engine.render(type_, elt.attr, children, elt.markup)
